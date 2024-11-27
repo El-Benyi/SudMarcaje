@@ -1,0 +1,30 @@
+{% extends "base_template.html" %}
+<link rel="stylesheet" href="">
+
+{% block contenido %}
+<div class="container">
+        <div class="container-auth row">
+            <div class="col-6" id="login">
+                    <h1>Acceso de Administradores</h1>
+                    <form action="/login" method="POST">
+                        {{ form_acceso.hidden_tag() }}
+                        {{ form_acceso.correo.label }}
+                        {{ form_acceso.correo(class="form-control") }}
+                        {{ form_acceso.clave.label }}
+                        {{ form_acceso.clave(class="form-control") }}
+                        <br>
+                        {{ form_acceso.submit(class="btn btn-primary") }}
+                    </form>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                                {% for message in messages %}
+                                <li style="color: red;">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+            </div>
+        </div>
+</div>
+{% endblock %}

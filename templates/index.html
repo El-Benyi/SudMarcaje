@@ -1,0 +1,43 @@
+{% extends "base_template.html" %}
+
+
+
+{% block contenido %}
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+
+
+    <div class="container">
+        <div class="edit_profile">
+            <a href="{{ url_for('editar_perfil', usuario_id=usuario.id) }}" class="btn danger">Editar Mi Perfil</a>
+        </div>
+        {% if current_user.status == 'Administrador' %}
+        
+            <table class="table table-striped" id="tabla">
+                    <tr class="encabezados">
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Correo</th>
+                        <th>Numero Telefonico</th>
+                        <th>Cargo</th>
+                        <th>Botones</th>
+                    </tr>
+                {% for usuario in obtener_usuarios %}
+                    <tr>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.apellido_p }} {{ usuario.apellido_m }}</td>
+                        <td>{{ usuario.correo }}</td>
+                        <td>{{ usuario.numero_t }}</td>
+                        <td>{{ usuario.cargo }}</td>
+                        <td><a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}">Editar Usuario <i class='bx bx-edit'></i></a></td>
+                        <td><a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}">Ver Perfil <i class='bx bx-edit'></i></a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        {% endif %} 
+
+        
+
+    </div>
+{% endblock %}

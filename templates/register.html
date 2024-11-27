@@ -1,0 +1,95 @@
+{% extends "base_template.html" %}
+
+
+
+
+
+{% block contenido %}
+
+
+<div class="container" id="register">
+    <h1>Registro de Trabajadores</h1>
+    <form action="/register" method="POST">
+        {{ form_registro.hidden_tag() }}
+        <div class="seccion">
+            <div class="mb-3">
+                {{ form_registro.nombre.label }}
+                {{ form_registro.nombre(class="form-control") }}
+                {% for error in form_registro.nombre.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form_registro.apellido_p.label }}
+                {{ form_registro.apellido_p(class="form-control") }}
+                {% for error in form_registro.apellido_p.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="seccion">
+            <div class="mb-3">
+                {{ form_registro.apellido_m.label }}
+                {{ form_registro.apellido_m(class="form-control") }}
+                {% for error in form_registro.apellido_m.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form_registro.status.label }}
+                {{ form_registro.status(class="form-control") }}
+            </div>
+        </div>
+        <div class="seccion">
+            <div class="mb-3">
+                {{ form_registro.cargo.label }}
+                {{ form_registro.cargo(class="form-control") }}
+                {% for error in form_registro.cargo.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form_registro.numero_t .label }}
+                {{ form_registro.numero_t (class="form-control") }}
+                {% for error in form_registro.numero_t .errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div></div>
+        <div class="seccion">
+            <div class="mb-3">
+                {{ form_registro.correo.label }}
+                {{ form_registro.correo(class="form-control") }}
+                {% for error in form_registro.correo.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form_registro.confirmar_correo.label }}
+                {{ form_registro.confirmar_correo(class="form-control") }}
+                {% for error in form_registro.confirmar_correo.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div></div>
+        <div class="seccion">
+            <div class="mb-3">
+                {{ form_registro.clave.label }}
+                {{ form_registro.clave(class="form-control", id="clave_input") }}
+                {% for error in form_registro.clave.errors %}
+                <span style="color: red;">{{ error }}</span> 
+                {% endfor %}
+                <div class="btn1">
+                    <input type="checkbox", id="show_clave">Mostrar Contraseña
+                </div>
+            </div>
+            <div class="mb-3">
+                {{ form_registro.confirmar_clave.label }}
+                {{ form_registro.confirmar_clave(class="form-control", id="confirm_input", type="password") }} 
+                <div class="btn2">
+                    <input type="checkbox" id="show_confirm">Mostrar Contraseña
+                </div>
+            </div>
+        </div>
+        {{ form_registro.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

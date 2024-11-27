@@ -1,0 +1,24 @@
+.container{
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10vh;
+    width: 100%;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit_profile{
+    width: 100%;
+    justify-content: center;
+    top: 0;
+}
+
+.seccion{
+    gap: 20px;
+    display: flex;
+}
+.seccion .mb-3 {
+    flex: 1;
+}

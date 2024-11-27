@@ -1,0 +1,39 @@
+{% extends "base_template.html" %}
+
+
+
+{% block contenido %}
+
+
+<div class="container">
+    <div class="reloj">
+        <h1>Hora actual: <span id="reloj">{{ hora_actual }}</span></h1>
+    </div>
+    <form action="/asistencia" method="POST">
+        {{ form_a.hidden_tag() }}
+        <div class="mb-3">
+            {{ form_a.user_mail.label }}
+            {{ form_a.user_mail(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form_a.hora_inicio.label }}
+            {{ form_a.hora_inicio(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form_a.hora_fin.label }}
+            {{ form_a.hora_fin(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form_a.turno.label }}
+            {{ form_a.turno(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form_a.fecha_registro.label }}
+            {{ form_a.fecha_registro(class="form-control", type="date", id="fecha") }}
+        </div>
+        {{ form_a.submit(class="btn btn-primary") }}
+    </form>
+</div>
+
+
+{% endblock %}

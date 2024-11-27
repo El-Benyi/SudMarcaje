@@ -1,0 +1,35 @@
+{% extends "base_template.html" %}
+
+
+{% block contenido %}
+<div class="container">
+    <h2>Editar Perfil de: {{ usuario.nombre }}</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.status.label }}
+            {{ form.status(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.cargo.label }}
+            {{ form.cargo(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.numero_t.label }}
+            {{ form.numero_t(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.correo.label }}
+            {{ form.correo(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.clave.label }}
+            {{ form.clave(class="form-control", id="clave_input") }}
+            <div class="btn1">
+                <input type="checkbox", id="show_clave">Mostrar Contraseña
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+    </form>
+</div>
+{% endblock %}
