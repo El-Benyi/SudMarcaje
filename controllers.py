@@ -27,6 +27,9 @@ class ControladorUsuarios:
     
 class ControladorAsistencia:
     @staticmethod
+    def all_asistencias():
+        return Asistencia.query.all()
+    @staticmethod
     def crear_asistencia(user_mail, hora_inicio, hora_termino, turno):
         if not user_mail:
             print("El correo electrónico es obligatorio.")

@@ -6,6 +6,26 @@
 
 <div class="container container-fluid">
     <h1>Aqui estaran los horarios</h1>
+    {% for asistencia in asistencias %}
+        {% if current_user.status == "Administrador" %}
+            {% for asistencia in obtener_asistencias %}
+                <h1>Hola</h1>
+                <tr>
+                    <td>{{ asistencia.usuario.correo }}</td>
+                    <td>{{ asistencia.hora_inicio }}</td>
+                    <td>{{ asistencia.hora_termino }}</td>
+                    <td>{{ asistencia.hora_registro}}</td>
+                </tr>
+                {% endfor %}
+        {% elif current_user.status == "Normal" %}
+            <tr>
+                <td>{{ asistencia.usuario.correo }}</td>
+                <td>{{ current_user.hora_inicio }}</td>
+                <td>{{ asistencia.hora_termino }}</td>
+                <td>{{ asistencia.hora_registro}}</td>
+            </tr>
+        {% endif %}
+        {% endfor %}
 </div>
 
 {% endblock %}

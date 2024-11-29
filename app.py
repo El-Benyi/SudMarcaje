@@ -199,10 +199,13 @@ def asistencia():
 
     return render_template("asistencia.html", form_a=form_a, hora_actual=hora_actual)
 
-@app.route("/horario")
+@app.route("/horario", methods=["GET"])
 @login_required
-def mostrar_horarios():
-    return render_template("horarios.html")
+def horarios():
+    obtener = ControladorAsistencia.all_asistencias()
+    asistencias = Asistencia.query.filter_by(usuario_id=current_user.id).all()
+
+    return render_template("horarios.html", asistencias=asistencias, obtener_asistencias=obtener)
 
 @app.route("/eliminar/<int:user_id>", methods=["POST", "GET"])
 @login_required
