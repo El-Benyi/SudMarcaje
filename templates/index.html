@@ -7,33 +7,51 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
 
 
-    <div class="container">
+    <div class="container container-fluid">
         <div class="edit_profile">
-            <a href="{{ url_for('editar_perfil', usuario_id=usuario.id) }}" class="btn danger">Editar Mi Perfil</a>
         </div>
         {% if current_user.status == 'Administrador' %}
         
-            <table class="table table-striped" id="tabla">
-                    <tr class="encabezados">
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
-                        <th>Correo</th>
-                        <th>Numero Telefonico</th>
-                        <th>Cargo</th>
-                        <th>Botones</th>
-                    </tr>
+        <div class="table-responsive-xxl">
+            <table class="table align-middle" id="tabla">
+                <tr class="encabezados">
+                    <th>Trabajador/a</th>
+                </tr>
                 {% for usuario in obtener_usuarios %}
-                    <tr>
-                        <td>{{ usuario.nombre }}</td>
-                        <td>{{ usuario.apellido_p }} {{ usuario.apellido_m }}</td>
-                        <td>{{ usuario.correo }}</td>
-                        <td>{{ usuario.numero_t }}</td>
-                        <td>{{ usuario.cargo }}</td>
-                        <td><a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}">Editar Usuario <i class='bx bx-edit'></i></a></td>
-                        <td><a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}">Ver Perfil <i class='bx bx-edit'></i></a></td>
-                    </tr>
+                <tr>
+                    <td><a type="button" class="show_info_btn btn btn-info" data-id="{{ usuario.id }}">{{ usuario.nombre }}</a></td>
+                    </td>
+                </tr>
                 {% endfor %}
             </table>
+        </div>
+        
+        {% for usuario in obtener_usuarios %}
+        <div class="overlay">
+            <div id="show_info_{{ usuario.id }}" class="profile_user card card-header" style="display: none;">
+                <h4><i class='bx bxs-user-detail'></i>{{ usuario.nombre }} </i>{{ usuario.apellido_p }} </i>{{ usuario.apellido_m }}</h4>
+                <h4><i class='bx bxl-gmail' ></i>{{ usuario.correo }}</h4>
+                <h4><i class='bx bxs-phone'></i>{{ usuario.numero_t }}</h4>
+                <h4><i class='bx bxs-hard-hat' ></i>{{ usuario.cargo }}</h4>
+                {% if usuario.status == 'Administrador' %}
+                    <h4><i class='bx bxs-star'></i>{{ usuario.status }}</h4>
+                {% else%}
+                    <h4><i class='bx bxs-user'></i></i>{{ usuario.status }}</h4>
+                {% endif %}
+                {% if usuario.id != current_user.id %}
+                
+                    <form action="{{ url_for('eliminar', user_id=usuario.id) }}" method="POST">
+                        <button class="btn btn-sm btn-danger" type="submit">
+                            Eliminar Trabajador <i class='bx bxs-trash'></i>
+                        </button>
+                    </form>
+                    <a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}" class=" btn btn-success">Editar Usuario <i class='bx bx-edit'></i></a>
+
+                {% endif %}
+                <a class="close-btn btn btn-danger">Cerrar Perfil</a>
+            </div>
+        </div>
+        {% endfor %}
 
         {% endif %} 
 

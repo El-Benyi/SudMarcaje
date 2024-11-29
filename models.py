@@ -2,6 +2,7 @@
     Archivo de modelos de bases de datos
 """
 from app import db
+from sqlalchemy import func
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash 
 
@@ -54,14 +55,15 @@ class Usuario(db.Model, UserMixin):
 class Asistencia(db.Model):
     __tablename__ = "asistencia"
     id            = db.Column(db.Integer, primary_key = True)
-    hora_inicio   = db.Column(db.DateTime(), nullable=False)
-    hora_termino  = db.Column(db.DateTime(), nullable=False)
-    lugar         = db.Column(db.String(255), nullable=False)
+    hora_inicio   = db.Column(db.Time(), nullable=False)
+    hora_termino  = db.Column(db.Time(), nullable=False)
+    hora_registro = db.Column(db.Time(), nullable=False, default=func.now())
     turno         = db.Column(db.String(255), nullable=False)
 
-    created_at    = db.Column(db.DateTime(), nullable=True) 
-    updated_at    = db.Column(db.DateTime(), nullable=True) 
+    created_at    = db.Column(db.DateTime, nullable=False, default=func.now())
+    updated_at    = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now()) 
 
+    
     usuario_id    = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
     usuario       = db.relationship("Usuario", back_populates="asistencias")
 

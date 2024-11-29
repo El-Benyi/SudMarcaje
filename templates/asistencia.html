@@ -5,10 +5,7 @@
 {% block contenido %}
 
 
-<div class="container">
-    <div class="reloj">
-        <h1>Hora actual: <span id="reloj">{{ hora_actual }}</span></h1>
-    </div>
+<div class="container container-fluid">
     <form action="/asistencia" method="POST">
         {{ form_a.hidden_tag() }}
         <div class="mb-3">
@@ -30,6 +27,10 @@
         <div class="mb-3">
             {{ form_a.fecha_registro.label }}
             {{ form_a.fecha_registro(class="form-control", type="date", id="fecha") }}
+        </div>
+        <div class="mb-3">
+            {{ form_a.hora_registro.label }}
+            <span id="reloj">{{ hora_actual }}</span>
         </div>
         {{ form_a.submit(class="btn btn-primary") }}
     </form>

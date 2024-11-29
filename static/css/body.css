@@ -9,6 +9,15 @@ body{
     box-sizing: border-box;
     background: #1dd177;
     background: linear-gradient(to right, #7ec7a2, #378ce2);
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+}
+
+@media (max-width: 785px) {
+    body {
+        background-size: cover;
+        background-position: center center;
+    }
 }

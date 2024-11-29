@@ -54,10 +54,10 @@ def auth(form_registro=None, form_acceso=None):
 @login_required
 def register():
     if current_user.status == 'Administrador':
-        # Recibimos datos del formulario
+        
         form  = FormularioRegistro()
         error = None 
-        #Validos errores de formulario
+
         if form.validate_on_submit():
             print("form valido")
             flash("Form valido")
@@ -69,7 +69,7 @@ def register():
             apellido_m = form.apellido_m.data
             correo = form.correo.data 
             clave  = form.clave.data 
-            #Consultamos si existe en la db 
+
             usuario = Usuario().obtener_por_correo(correo)
             if usuario is not None:
                 error = f"El correo {correo} ya se encuentra registrado"
@@ -78,20 +78,17 @@ def register():
                 return(redirect("/"))
             else:
                 flash(f'Registro solicitado para el usuario { correo }')
-                #Utilización de un controlador entre Vista y Modelo
-                ControladorUsuarios().crear_usuario(status, cargo,numero_t , nombre, apellido_p, apellido_m, correo, clave)
-                #Generamos una instancia de datos            
-                return redirect("/home")
+                ControladorUsuarios().crear_usuario(status, cargo,numero_t , nombre, apellido_p, apellido_m, correo, clave)         
+                return redirect("/register")
         else:
             print("form invalido")
             flash("Form invalido")
-            #devolvemos al índice con forumalario relleno
             return render_template("register.html", form_registro=form)
     else:
         return render_template("error.html")
 
 #La ruta que nos hace el acceso (login)
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form_acceso = FormularioAcceso()
     if form_acceso.validate_on_submit():
@@ -186,7 +183,6 @@ def asistencia():
     if form_a.validate_on_submit():
         user_mail = form_a.user_mail.data
 
-        # Verificar si el usuario existe
         usuario = Usuario.query.filter_by(correo=user_mail).first()
         if not usuario:
             flash("El correo ingresado no pertenece a un usuario registrado.", "error")
@@ -195,12 +191,25 @@ def asistencia():
         hora_inicio = form_a.hora_inicio.data
         hora_fin = form_a.hora_fin.data
         turno = form_a.turno.data
-        fecha_registro = form_a.fecha_registro.data
-        hora_registro = form_a.hora_registro.data
 
-        ControladorAsistencia().crear_asistencia(user_mail, hora_inicio, hora_fin, turno, fecha_registro, hora_registro)
+        ControladorAsistencia.crear_asistencia(user_mail, hora_inicio, hora_fin, turno)
 
         flash("Asistencia registrada exitosamente.", "success")
-        return redirect(url_for("asistencia"))
+        return redirect(url_for("home"))
 
     return render_template("asistencia.html", form_a=form_a, hora_actual=hora_actual)
+
+@app.route("/horario")
+@login_required
+def mostrar_horarios():
+    return render_template("horarios.html")
+
+@app.route("/eliminar/<int:user_id>", methods=["POST", "GET"])
+@login_required
+def eliminar(user_id):
+    usuario = Usuario.query.get_or_404(user_id)
+    
+    db.session.delete(usuario)
+    db.session.commit()
+    
+    return redirect("/home")

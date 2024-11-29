@@ -27,12 +27,22 @@ class ControladorUsuarios:
     
 class ControladorAsistencia:
     @staticmethod
-    def crear_asistencia(hora_inicio, hora_termino, lugar, turno):
+    def crear_asistencia(user_mail, hora_inicio, hora_termino, turno):
+        if not user_mail:
+            print("El correo electrónico es obligatorio.")
+            return None
+
+        usuario = Usuario.obtener_por_correo(user_mail)
+        if not usuario:
+            print(f"No se encontró el usuario con correo: {user_mail}")
+            return None 
+
+        # Crear la nueva asistencia
         asistencia = Asistencia()
         asistencia.hora_inicio = hora_inicio
-        asistencia.hora_termino =hora_termino
-        asistencia.lugar = lugar
+        asistencia.hora_termino = hora_termino
         asistencia.turno = turno
+        asistencia.usuario_id = usuario.id  
 
         db.session.add(asistencia)
         db.session.commit()

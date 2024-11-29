@@ -14,3 +14,4 @@ document.addEventListener("DOMContentLoaded", function() {
         confirmInput.type = this.checked ? "text" : "password";
     });
 });
+

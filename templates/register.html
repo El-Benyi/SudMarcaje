@@ -7,7 +7,7 @@
 {% block contenido %}
 
 
-<div class="container" id="register">
+<div class="container container-fluid" id="register">
     <h1>Registro de Trabajadores</h1>
     <form action="/register" method="POST">
         {{ form_registro.hidden_tag() }}
@@ -78,18 +78,20 @@
                 <span style="color: red;">{{ error }}</span> 
                 {% endfor %}
                 <div class="btn1">
-                    <input type="checkbox", id="show_clave">Mostrar Contraseña
+                    <input type="checkbox", id="show_clave">
+                    <label for="show_clave" class="form-check-label">Mostrar Contraseña</label>
                 </div>
             </div>
             <div class="mb-3">
                 {{ form_registro.confirmar_clave.label }}
                 {{ form_registro.confirmar_clave(class="form-control", id="confirm_input", type="password") }} 
                 <div class="btn2">
-                    <input type="checkbox" id="show_confirm">Mostrar Contraseña
+                    <input type="checkbox" id="show_confirm">
+                    <label for="show_confirm" class="form-check-label">Mostrar Contraseña</label>
                 </div>
             </div>
         </div>
-        {{ form_registro.submit(class="btn btn-primary") }}
+        {{ form_registro.submit(class="btn btn-primary", id="liveAlertBtn") }}
     </form>
 </div>
 {% endblock %}
