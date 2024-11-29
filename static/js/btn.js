@@ -13,5 +13,17 @@ document.addEventListener("DOMContentLoaded", function() {
     showConfirmCheckbox.addEventListener("change", function() {
         confirmInput.type = this.checked ? "text" : "password";
     });
+    document.getElementById('delete_user').addEventListener('click', function() {
+        // Mostrar el cuadro de confirmación
+        if (confirm("¿Estás seguro de que deseas eliminar este trabajador?")) {
+            // Si el usuario confirma, enviar el formulario
+            document.getElementById('delete_form').submit();
+        }
+    });
 });
+
+
+
+
+
 

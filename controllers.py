@@ -30,7 +30,7 @@ class ControladorAsistencia:
     def all_asistencias():
         return Asistencia.query.all()
     @staticmethod
-    def crear_asistencia(user_mail, hora_inicio, hora_termino, turno):
+    def crear_asistencia(user_mail, hora_inicio, hora_termino,fecha_registro, turno):
         if not user_mail:
             print("El correo electrónico es obligatorio.")
             return None
@@ -44,6 +44,7 @@ class ControladorAsistencia:
         asistencia = Asistencia()
         asistencia.hora_inicio = hora_inicio
         asistencia.hora_termino = hora_termino
+        asistencia.fecha_registro = fecha_registro
         asistencia.turno = turno
         asistencia.usuario_id = usuario.id  
 

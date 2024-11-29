@@ -2,7 +2,7 @@
     Archivo donde se definen los formularios del sistema
 """
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, EmailField, SelectField, TimeField, DateTimeField
+from wtforms import StringField, SubmitField, PasswordField, EmailField, SelectField, TimeField, DateField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp
 
 class FormularioRegistro(FlaskForm):    
@@ -49,6 +49,6 @@ class FormularioAsistencia(FlaskForm):
     turno               = SelectField(
                         'Turnos',
                         choices=[('diurno', 'Diurno (08:00 a 20:00 hrs)'),('nocturno', 'Nocturno (20:00 a 08:00 hrs)')],validators=[DataRequired()])
-    fecha_registro      = DateTimeField('Fecha Registro', format='%Y-%m-%d', validators=[DataRequired()])
+    fecha_registro      = DateField('Fecha', format='%Y-%m-%d', validators=[DataRequired()])
     hora_registro       = TimeField('Hora de Registro')
     submit              = SubmitField('Registrar Asistencia ')

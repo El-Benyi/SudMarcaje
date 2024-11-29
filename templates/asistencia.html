@@ -10,7 +10,15 @@
         {{ form_a.hidden_tag() }}
         <div class="mb-3">
             {{ form_a.user_mail.label }}
-            {{ form_a.user_mail(class="form-control") }}
+            {{ form_a.user_mail(class="form-control", type="search", id="user_mail") }}
+            <div id="email_suggestions"></div>
+            {% if form_a.user_mail.errors %}
+                <div class="text-danger">
+                    {% for error in form_a.user_mail.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
         <div class="mb-3">
             {{ form_a.hora_inicio.label }}

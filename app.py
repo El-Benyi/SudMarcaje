@@ -2,7 +2,7 @@
 Archivo app.py: módulo principal de la aplicación.
 """
 # Importamos librerias necesarias 
-from flask import Flask, render_template, flash, redirect, request, url_for
+from flask import Flask, render_template, flash, redirect, request, url_for, jsonify
 
 from flask_sqlalchemy import SQLAlchemy #base de datos
 from flask_migrate import Migrate #versiones de bases de datos
@@ -190,9 +190,10 @@ def asistencia():
 
         hora_inicio = form_a.hora_inicio.data
         hora_fin = form_a.hora_fin.data
+        fecha_registro = form_a.fecha_registro.data
         turno = form_a.turno.data
 
-        ControladorAsistencia.crear_asistencia(user_mail, hora_inicio, hora_fin, turno)
+        ControladorAsistencia.crear_asistencia(user_mail, hora_inicio, hora_fin,fecha_registro, turno)
 
         flash("Asistencia registrada exitosamente.", "success")
         return redirect(url_for("home"))
@@ -212,7 +213,22 @@ def horarios():
 def eliminar(user_id):
     usuario = Usuario.query.get_or_404(user_id)
     
+    asistencias = Asistencia.query.filter_by(usuario_id=usuario.id).all()
+    
+    for asistencia in asistencias:
+        db.session.delete(asistencia)
+    
     db.session.delete(usuario)
+    
+    # Guardas los cambios en la base de datos
     db.session.commit()
     
     return redirect("/home")
+
+@app.route('/check_email')
+def check_email():
+    email = request.args.get('email', '').lower()
+    usuarios = Usuario.query.filter(Usuario.correo.like(f'{email}%')).all()
+    suggestions = [user.correo for user in usuarios]
+    
+    return jsonify({'suggestions': suggestions})

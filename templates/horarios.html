@@ -5,27 +5,100 @@
 {% block contenido %}
 
 <div class="container container-fluid">
-    <h1>Aqui estaran los horarios</h1>
+    {% if current_user.status == "Administrador" %}
+    {% for asistencia in obtener_asistencias %}
+    <tr>
+        <td>
+            <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#asistenciaModal{{ asistencia.usuario.id }}" style="display: flex; margin-top: 10px;">
+                {{ asistencia.usuario.correo }}
+            </button>
+        </td>
+    </tr>
+
+    <div class="modal fade" id="asistenciaModal{{ asistencia.usuario.id }}" tabindex="-1" aria-labelledby="asistenciaModalLabel{{ asistencia.usuario.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="asistenciaModalLabel{{ asistencia.usuario.id }}">
+                        Asistencias de {{ asistencia.usuario.nombre }} {{ asistencia.usuario.apellido_p }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha del Registro</th>
+                                <th>Hora Inicio</th>
+                                <th>Hora Término</th>
+                                <th>Hora Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ asistencia.fecha_registro }}</td>
+                                <td>{{ asistencia.hora_inicio }}</td>
+                                <td>{{ asistencia.hora_termino }}</td>
+                                <td>{{ asistencia.hora_registro }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% elif current_user.status == "Normal" %}
     {% for asistencia in asistencias %}
-        {% if current_user.status == "Administrador" %}
-            {% for asistencia in obtener_asistencias %}
-                <h1>Hola</h1>
-                <tr>
-                    <td>{{ asistencia.usuario.correo }}</td>
-                    <td>{{ asistencia.hora_inicio }}</td>
-                    <td>{{ asistencia.hora_termino }}</td>
-                    <td>{{ asistencia.hora_registro}}</td>
-                </tr>
-                {% endfor %}
-        {% elif current_user.status == "Normal" %}
-            <tr>
-                <td>{{ asistencia.usuario.correo }}</td>
-                <td>{{ current_user.hora_inicio }}</td>
-                <td>{{ asistencia.hora_termino }}</td>
-                <td>{{ asistencia.hora_registro}}</td>
-            </tr>
-        {% endif %}
-        {% endfor %}
+    <tr>
+        <td>
+            <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#asistenciaModal{{ asistencia.id }}">
+                Mis Asistencias
+            </button>
+        </td>
+    </tr>
+
+    <div class="modal fade" id="asistenciaModal{{ asistencia.id }}" tabindex="-1" aria-labelledby="asistenciaModalLabel{{ asistencia.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="asistenciaModalLabel{{ asistencia.id }}">
+                        Tu Asistencia
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha del Registro</th>
+                                <th>Hora Inicio</th>
+                                <th>Hora Término</th>
+                                <th>Hora Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ asistencia.fecha_registro }}</td>
+                                <td>{{ asistencia.hora_inicio }}</td>
+                                <td>{{ asistencia.hora_termino }}</td>
+                                <td>{{ asistencia.hora_registro }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
 </div>
 
 {% endblock %}
