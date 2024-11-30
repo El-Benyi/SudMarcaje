@@ -16,7 +16,7 @@ class FormularioRegistro(FlaskForm):
     cargo               = StringField('Cargo.', validators=[DataRequired(), Length(min=3)])
     correo              = EmailField('Correo', validators=[DataRequired(), Email(), EqualTo('confirmar_correo', message="Los correos deben ser iguales.")])
     confirmar_correo    = EmailField('Confirmar correo', validators=[DataRequired(), Email(), EqualTo('correo', message="Los correos deben ser iguales.")])
-    clave               = PasswordField('Contraseña', validators=[DataRequired(), EqualTo('confirmar_clave', message="Las claves deben ser iguales.")])
+    clave               = PasswordField('Ingresar Contraseña', validators=[DataRequired(), EqualTo('confirmar_clave', message="Las claves deben ser iguales.")])
     confirmar_clave     = PasswordField('Confirmar contraseña', validators=[DataRequired()])
     submit              = SubmitField('Registrar Usuario')
 

@@ -120,9 +120,7 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-    usuario = current_user
-    obtener = ControladorUsuarios.all_users()
-    return render_template("index.html", obtener_usuarios=obtener, usuario=usuario)
+    return render_template("index.html")
 
 
 @app.route("/update/<int:usuario_id>", methods=["GET", "POST"])
@@ -169,10 +167,6 @@ def editar_perfil(usuario_id):
 
     return render_template("edit_profile.html", form=form, usuario=usuario)
 
-@app.route("/mapa")
-@login_required
-def mapa():
-    return render_template("map.html")
 
 @app.route("/asistencia", methods=["GET", "POST"])
 @login_required
@@ -206,7 +200,22 @@ def horarios():
     obtener = ControladorAsistencia.all_asistencias()
     asistencias = Asistencia.query.filter_by(usuario_id=current_user.id).all()
 
-    return render_template("horarios.html", asistencias=asistencias, obtener_asistencias=obtener)
+    # Agrupar asistencias por usuario
+    usuarios_con_asistencias = {}
+    for asistencia in obtener:
+        usuario = asistencia.usuario
+        if usuario.id not in usuarios_con_asistencias:
+            usuarios_con_asistencias[usuario.id] = {
+                "usuario": usuario,
+                "asistencias": []
+            }
+        usuarios_con_asistencias[usuario.id]["asistencias"].append(asistencia)
+
+    return render_template(
+        "horarios.html",
+        asistencias=asistencias,
+        obtener_asistencias=usuarios_con_asistencias.values(),
+    )
 
 @app.route("/eliminar/<int:user_id>", methods=["POST", "GET"])
 @login_required
@@ -220,7 +229,6 @@ def eliminar(user_id):
     
     db.session.delete(usuario)
     
-    # Guardas los cambios en la base de datos
     db.session.commit()
     
     return redirect("/home")
@@ -232,3 +240,14 @@ def check_email():
     suggestions = [user.correo for user in usuarios]
     
     return jsonify({'suggestions': suggestions})
+
+@app.route("/trabajadores")
+@login_required
+def asistencias():
+    usuario = current_user
+    obtener = ControladorUsuarios.all_users()
+
+    if current_user.status != "Administrador":
+        return redirect(url_for("home"))
+
+    return render_template("trabajadores.html", obtener_usuarios=obtener, usuario=usuario)

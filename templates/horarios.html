@@ -5,22 +5,22 @@
 {% block contenido %}
 
 <div class="container container-fluid">
-    {% if current_user.status == "Administrador" %}
-    {% for asistencia in obtener_asistencias %}
-    <tr>
-        <td>
-            <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#asistenciaModal{{ asistencia.usuario.id }}" style="display: flex; margin-top: 10px;">
-                {{ asistencia.usuario.correo }}
-            </button>
-        </td>
-    </tr>
+    <div class="sub-container">
+        <h1 style="width: 100%; text-align: center; text-decoration: underline; padding-top: 10px; padding-bottom: 10px;">Turnos y Horarios</h1>
+        {% if current_user.status == "Administrador" %}
+        {% for grupo in obtener_asistencias %}
+    <div class="btn_asistencia" style="display: flex; width: 100%; justify-content: center; margin-top: 10px;">
+        <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#asistenciaModal{{ grupo.usuario.id }}" style="width: 100%; height: 7vh;">
+            {{ grupo.usuario.correo }}
+        </button>
+    </div>
 
-    <div class="modal fade" id="asistenciaModal{{ asistencia.usuario.id }}" tabindex="-1" aria-labelledby="asistenciaModalLabel{{ asistencia.usuario.id }}" aria-hidden="true">
+    <div class="modal fade" id="asistenciaModal{{ grupo.usuario.id }}" tabindex="-1" aria-labelledby="asistenciaModalLabel{{ grupo.usuario.id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="asistenciaModalLabel{{ asistencia.usuario.id }}">
-                        Asistencias de {{ asistencia.usuario.nombre }} {{ asistencia.usuario.apellido_p }}
+                    <h5 class="modal-title" id="asistenciaModalLabel{{ grupo.usuario.id }}">
+                        Asistencias de {{ grupo.usuario.nombre }} {{ grupo.usuario.apellido_p }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -29,18 +29,22 @@
                         <thead>
                             <tr>
                                 <th>Fecha del Registro</th>
+                                <th>Turno</th>
                                 <th>Hora Inicio</th>
                                 <th>Hora Término</th>
                                 <th>Hora Registro</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for asistencia in grupo.asistencias %}
                             <tr>
                                 <td>{{ asistencia.fecha_registro }}</td>
+                                <td>{{ asistencia.turno }}</td>
                                 <td>{{ asistencia.hora_inicio }}</td>
                                 <td>{{ asistencia.hora_termino }}</td>
                                 <td>{{ asistencia.hora_registro }}</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -50,55 +54,9 @@
             </div>
         </div>
     </div>
-    {% endfor %}
-
-{% elif current_user.status == "Normal" %}
-    {% for asistencia in asistencias %}
-    <tr>
-        <td>
-            <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#asistenciaModal{{ asistencia.id }}">
-                Mis Asistencias
-            </button>
-        </td>
-    </tr>
-
-    <div class="modal fade" id="asistenciaModal{{ asistencia.id }}" tabindex="-1" aria-labelledby="asistenciaModalLabel{{ asistencia.id }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="asistenciaModalLabel{{ asistencia.id }}">
-                        Tu Asistencia
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Fecha del Registro</th>
-                                <th>Hora Inicio</th>
-                                <th>Hora Término</th>
-                                <th>Hora Registro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ asistencia.fecha_registro }}</td>
-                                <td>{{ asistencia.hora_inicio }}</td>
-                                <td>{{ asistencia.hora_termino }}</td>
-                                <td>{{ asistencia.hora_registro }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-{% endif %}
+{% endfor %}
+    {% endif %}
+</div>
 </div>
 
 {% endblock %}

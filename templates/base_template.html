@@ -7,6 +7,7 @@
         {% block titulo %}
         {% endblock %}
     </title>
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
@@ -19,8 +20,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/reloj.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/busqueda.js') }}" defer></script>
 
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/body.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/navbar.css') }}">
 </head>
 <body>
@@ -31,36 +31,42 @@
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <h2>Bienvenido {{ current_user.nombre }}</h2>
+                <h2 class="navbar-brand" style="font-size: 30px;">Bienvenido {{ current_user.nombre }}</h2>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a href="/home"><i class='bx bxs-food-menu' id="reg_users"></i></a>
+                    <a href="/" class="btn_navbar" ><i class='bx bxs-home' ></i>Inicio</a>
                   </li>
-                  <li class="nav-item">
-                    <a href="{{ url_for('mapa') }}"><i class='bx bx-target-lock' id="map"></i></a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/horario"><i class='bx bxs-calendar' id="horarios"></i></a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ url_for('asistencia') }}"><i class='bx bx-list-ul' id="register_work"></i></a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle btn_navbar" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class='bx bxs-calendar' id="horarios"></i> Horarios & Registro
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item " href="/horario"><i class='bx bxs-calendar'></i> Horarios</a></li>
+                      <li><a class="dropdown-item " href="{{ url_for('asistencia') }}"><i class='bx bx-list-ul' id="register_work"></i> Registro Asistencia</a></li>
+                    </ul>
                   </li>
                   {% if current_user.status == 'Administrador' %}
-                  <li class="nav-item"><a href="{{ url_for('register') }}"><i class='bx bxs-user' id="users"></i></a></li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle btn_navbar" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class='bx bxs-briefcase'></i> Trabajadores
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{{ url_for('register') }}"><i class='bx bxs-user' id="users"></i> Registrar Trabajador</a></li>
+                      <li><a class="dropdown-item" href="/trabajadores"><i class='bx bxs-food-menu' id="reg_users"></i> Trabajadores</a></li>
+                    </ul>
+                  </li>
                   {% endif %}
+                  
                   <li class="nav-item">
-                    <a href="{{ url_for('editar_perfil', usuario_id=current_user.id) }}">Editar Mi Perfil</a>
+                    <a href="{{ url_for('editar_perfil', usuario_id=current_user.id) }}" class="btn_navbar"><i class='bx bxs-edit'></i> Editar Mi Perfil</a>
                   </li>
                   <li class="nav-item">
-                    <a href="/" class="btn_navbar">Inicio</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/logout" class="btn_navbar">Cerrar sesión</a>
+                    <a href="/logout" class="btn_navbar"><i class='bx bx-log-out'></i> Cerrar sesión</a>
                   </li>
                 </ul>
               </div>
             </div>
-          </nav>
+        </nav>
     {% endif %}
     
     {% block contenido %}

@@ -1,10 +1,44 @@
 .navbar{
-    background: #6190e8;
-    background: -webkit-linear-gradient(to right, #6190e8, #a7bfe8);
-    background: linear-gradient(to right, #6190e8, #a7bfe8); 
+    background: #0575e6; 
+    background: -webkit-linear-gradient(to right, #0575e6, #021b79); 
+    background: linear-gradient(to right, #0575e6, #021b79); 
+    display: flex;
+    border-bottom: 1px black solid;
 }
 .navbar ul li i{
-    font-size: 30px;
+    display: flex;
+    color: rgb(230, 208, 208);
+    font-size: 20px;
     cursor: pointer;
 }
+.navbar ul li a{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: row;
+}
+.navbar ul{
+    gap: 20px;
+}
+.btn_navbar, a{
+    background-color: rgba(44, 153, 255, 0.658);
+    border-radius: 10px;
+    padding: 20px;
+    height: 50px;
+    display: flex;
+    text-decoration: none;
+    color: rgb(230, 208, 208);
+    cursor: pointer;
+}
+.navbar ul li a:hover,
+.navbar ul li a:hover i {
+    color: rgb(233, 173, 63);
+    background-color: #025d79;
+    transition: background-color 0.3s ease;
+}
+
+
+
 

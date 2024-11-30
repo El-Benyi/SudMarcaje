@@ -1,0 +1,63 @@
+{% extends "base_template.html" %} {% block contenido %}
+
+
+<div class="container container-fluid">
+  {% if current_user.status == 'Administrador' %}
+
+        <h1 style="text-align: center; text-decoration: underline; padding-top: 10px; padding-bottom: 10px;">Trabajadores</h1>
+        
+        <div class="container-workers">
+      {% for usuario in obtener_usuarios %}
+            <div class="workers">
+                <button class="show_info_btn" type="button" data-bs-toggle="modal" data-bs-target="#usuarioModal{{ usuario.id }}">
+                {{ usuario.correo }}
+                </button>
+            </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
+  {% for usuario in obtener_usuarios %}
+  <div class="modal fade" id="usuarioModal{{ usuario.id }}" tabindex="-1" aria-labelledby="usuarioModalLabel{{ usuario.id }}" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="usuarioModalLabel{{ usuario.id }}">
+            Nombre del trabajador: {{ usuario.nombre }} {{ usuario.apellido_p }} {{ usuario.apellido_m }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+          <p><strong>Teléfono:</strong> {{ usuario.numero_t }}</p>
+          <p><strong>Cargo:</strong> {{ usuario.cargo }}</p>
+          {% if usuario.status == "Administrador" %}
+            <p><strong>Estado:</strong>{{ usuario.status }}👑</i></p>
+            {% else %}
+                <p><strong>Estado:</strong>{{ usuario.status }}👤</p>
+          {% endif %}
+          {% if usuario.id != current_user.id %}
+          <div class="botones" style="display: flex; gap: 5px; justify-content: space-around;">
+            <form action="{{ url_for('eliminar', user_id=usuario.id) }}" method="POST">
+              <button
+                class="btn btn-danger" type="submit" id="delete_user">Eliminar Trabajador <i class="bx bxs-trash"></i>
+              </button>
+            </form>
+            <a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}" class="btn btn-success" >Editar Usuario <i class="bx bx-edit"></i></a>
+        </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+
+{% endblock %}

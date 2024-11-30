@@ -3,7 +3,7 @@
 
 {% block contenido %}
 <div class="container container-fluid">
-    <h2>Editar Perfil de: {{ usuario.nombre }}</h2>
+    <h2 style="text-align: center; text-decoration: underline; padding-top: 10px; padding-bottom: 10px;">Editar Perfil de: {{ usuario.nombre }}</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
         <div class="mb-3">
