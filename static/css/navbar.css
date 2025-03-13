@@ -14,29 +14,40 @@
 .navbar ul li a{
     width: 100%;
     display: flex;
-    justify-content: center;
+    color: #fff;
+    justify-content: start;
     align-items: center;
     text-align: center;
     flex-direction: row;
 }
+
+.navbar li .dropdown-item{
+    color: black;
+}
+
+.navbar ul li a:hover{
+    text-decoration: underline;
+    color: yellow;
+}
+.navbar .dropdown-item:hover{
+    text-decoration: underline;
+    color: black;
+}
+
 .navbar ul{
     gap: 20px;
 }
+
 .btn_navbar, a{
-    background-color: rgba(44, 153, 255, 0.658);
+    width: 100vh;
+    color: #fff;
     border-radius: 10px;
     padding: 20px;
     height: 50px;
     display: flex;
     text-decoration: none;
-    color: rgb(230, 208, 208);
+    color: rgb(0, 0, 0);
     cursor: pointer;
-}
-.navbar ul li a:hover,
-.navbar ul li a:hover i {
-    color: rgb(233, 173, 63);
-    background-color: #025d79;
-    transition: background-color 0.3s ease;
 }
 
 

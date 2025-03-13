@@ -16,6 +16,7 @@ class Usuario(db.Model, UserMixin):
     apellido_p = db.Column(db.String(255), nullable=True)
     apellido_m = db.Column(db.String(255), nullable=True)
     numero_t  = db.Column(db.String(15), nullable=True)
+    work      = db.Column(db.String(255), nullable=False)
     correo = db.Column(db.String(255), nullable=True, unique=True)
     clave = db.Column(db.String(255), nullable=True)
     
@@ -25,9 +26,7 @@ class Usuario(db.Model, UserMixin):
     def chequeo_clave(self, clave):
         return check_password_hash(self.clave, clave)
     
-    # Sobrescribe el método `save` o crea uno personalizado
     def save(self):
-        # Guarda o actualiza el usuario
         db.session.add(self)
         db.session.commit()
     @staticmethod
@@ -56,15 +55,15 @@ class Asistencia(db.Model):
     __tablename__   = "asistencia"
     id              = db.Column(db.Integer, primary_key = True)
     fecha_registro  = db.Column(db.Date(), nullable=False)
-    hora_inicio     = db.Column(db.Time(), nullable=False)
-    hora_termino    = db.Column(db.Time(), nullable=False)
     hora_registro   = db.Column(db.Time(), nullable=False, default=func.now())
     turno           = db.Column(db.String(255), nullable=False)
-
+    hora_inicio     = db.Column(db.Time(), nullable=False)  
+    hora_fin        = db.Column(db.Time(), nullable=True)  
+    latitud         = db.Column(db.Float, nullable=True)  
+    longitud        = db.Column(db.Float, nullable=True) 
     created_at      = db.Column(db.DateTime, nullable=False, default=func.now())
-    updated_at      = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now()) 
-
-
+    updated_at      = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now())
+    tiempo_trabajo  = db.Column(db.Time(), nullable=True)
     usuario_id      = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
     usuario         = db.relationship("Usuario", back_populates="asistencias")
 

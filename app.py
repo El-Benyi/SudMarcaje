@@ -11,7 +11,7 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 #Iniciación y configuración de la app
 app = Flask(__name__) 
 app.config["SECRET_KEY"] = "mi clave!"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/sudcap"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/suda_marcaje"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app) #iniciamos bases de datos
 
@@ -23,6 +23,7 @@ from forms import FormularioRegistro, FormularioAcceso, FormularioEditar, Formul
 from models import Usuario, Asistencia
 from controllers import ControladorUsuarios, ControladorAsistencia
 import time
+from datetime import datetime
 
 #Inicialización de versiones de la bases de datos
 Migrate(app,db)
@@ -67,6 +68,7 @@ def register():
             numero_t  = form.numero_t.data
             apellido_p = form.apellido_p.data
             apellido_m = form.apellido_m.data
+            work = form.work.data
             correo = form.correo.data 
             clave  = form.clave.data 
 
@@ -78,16 +80,16 @@ def register():
                 return(redirect("/"))
             else:
                 flash(f'Registro solicitado para el usuario { correo }')
-                ControladorUsuarios().crear_usuario(status, cargo,numero_t , nombre, apellido_p, apellido_m, correo, clave)         
+                ControladorUsuarios().crear_usuario(status, cargo,numero_t , nombre, apellido_p, apellido_m,work, correo, clave)         
                 return redirect("/register")
         else:
             print("form invalido")
             flash("Form invalido")
             return render_template("register.html", form_registro=form)
+        
     else:
-        return render_template("error.html")
+        return redirect("/")
 
-#La ruta que nos hace el acceso (login)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form_acceso = FormularioAcceso()
@@ -116,11 +118,12 @@ def logout():
     print(f"El usuario ha cerrado sesión")
     return(redirect("/"))
 
-#Ruta que nos lleva al inicio del usuario
 @app.route("/home")
 @login_required
 def home():
-    return render_template("index.html")
+    form_a = FormularioAsistencia()
+    asistencia = Asistencia.query.all()
+    return render_template("index.html", form_a=form_a, asistencia=asistencia)
 
 
 @app.route("/update/<int:usuario_id>", methods=["GET", "POST"])
@@ -128,32 +131,37 @@ def home():
 def editar_usuario(usuario_id):
     usuario = Usuario.query.get_or_404(usuario_id)
     form = FormularioEditar(obj=usuario)
+    if current_user.status == "Administrador":
+        if form.validate_on_submit():
+            usuario.status = form.status.data
+            usuario.cargo = form.cargo.data
+            usuario.work = form.work.data
+            usuario.correo = form.correo.data
+            usuario.numero_t = form.numero_t.data
+            
+            if form.clave.data:
+                usuario.establecer_clave(form.clave.data)
+            usuario.save()
 
-    if form.validate_on_submit():
-        usuario.status = form.status.data
-        usuario.cargo = form.cargo.data
-        usuario.correo = form.correo.data
-        usuario.numero_t = form.numero_t.data
-        
-        if form.clave.data:
-            usuario.establecer_clave(form.clave.data)
-        
-        # Utiliza el método `save` para manejar la lógica de Admin
-        usuario.save()
+            return redirect(url_for("home"))
+        return render_template("edit_user.html", form=form, usuario=usuario)
+    else:
+        return redirect("/")
 
-        flash("Usuario actualizado correctamente.", "success")
-        return redirect(url_for("home"))
-
-    return render_template("edit_user.html", form=form, usuario=usuario)
 
 
 @app.route("/editar/<int:usuario_id>", methods=["GET", "POST"])
 @login_required
 def editar_perfil(usuario_id):
     usuario = Usuario.query.get_or_404(usuario_id)
-    form = FormularioEditarPerfil(obj=usuario)
+    
+    if current_user.id != usuario.id:
+        return redirect("/")  
 
+    form = FormularioEditarPerfil(obj=usuario)
+    
     if form.validate_on_submit():
+        usuario.work = form.work.data
         usuario.correo = form.correo.data
         usuario.numero_t = form.numero_t.data
         
@@ -167,54 +175,112 @@ def editar_perfil(usuario_id):
 
     return render_template("edit_profile.html", form=form, usuario=usuario)
 
-
-@app.route("/asistencia", methods=["GET", "POST"])
+@app.route("/mapa")
 @login_required
+def mapa():
+    if current_user.status == "Administrador":
+        
+        return render_template("map.html")
+    else:
+        
+        return redirect("/")
+
+@app.route("/asistencia", methods=["POST"])
 def asistencia():
-    hora_actual = time.strftime("%H:%M:%S")
-    form_a = FormularioAsistencia()
+    try:
+        data = request.get_json()
+        
+        latitud = data.get("latitud")
+        longitud = data.get("longitud")
+        turno = data.get("turno")
+        fecha_registro = data.get("fecha_registro")  
+        tiempo_trabajo = data.get("tiempo_trabajo")
+        
+        hora_inicio = data.get("hora_inicio") 
+        hora_fin = data.get("hora_fin")  
 
-    if form_a.validate_on_submit():
-        user_mail = form_a.user_mail.data
+        usuario_id = current_user.id
 
-        usuario = Usuario.query.filter_by(correo=user_mail).first()
-        if not usuario:
-            flash("El correo ingresado no pertenece a un usuario registrado.", "error")
-            return redirect(url_for("asistencia"))
+        if not hora_inicio:
+            raise ValueError("La hora de inicio no puede ser nula")
+        
+        if not hora_fin:
+            hora_fin = None
 
-        hora_inicio = form_a.hora_inicio.data
-        hora_fin = form_a.hora_fin.data
-        fecha_registro = form_a.fecha_registro.data
-        turno = form_a.turno.data
+        nueva_asistencia = Asistencia(
+            fecha_registro=datetime.strptime(fecha_registro, "%Y-%m-%d").date(),  
+            turno=turno,
+            latitud=latitud,
+            longitud=longitud,
+            hora_inicio=hora_inicio,
+            hora_fin=hora_fin, 
+            tiempo_trabajo=tiempo_trabajo,
+            usuario_id=usuario_id
+        )
 
-        ControladorAsistencia.crear_asistencia(user_mail, hora_inicio, hora_fin,fecha_registro, turno)
+        db.session.add(nueva_asistencia)
+        db.session.commit()
 
-        flash("Asistencia registrada exitosamente.", "success")
-        return redirect(url_for("home"))
+        return jsonify({"message": "Asistencia registrada correctamente"}), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Hubo un problema al registrar la asistencia"}), 500
 
-    return render_template("asistencia.html", form_a=form_a, hora_actual=hora_actual)
+@app.route('/finalizar_asistencia/<int:id>', methods=['POST'])
+def finalizar_asistencia(id):
+    asistencia = Asistencia.query.get_or_404(id)
+    
+    asistencia.hora_fin = datetime.now()
+
+    db.session.commit()
+
+    return redirect(url_for('home'))
+
+@app.route('/api/coordenadas', methods=['GET'])
+@login_required
+def obtener_coordenadas():
+    if current_user.status == 'Administrador':
+        asistencias = Asistencia.query.all()  
+    else:
+        asistencias = Asistencia.query.filter_by(usuario_id=current_user.id).all()
+    
+    coordenadas = []
+
+    for asistencia in asistencias:
+        usuario = asistencia.usuario 
+        coordenadas.append({
+            'nombre': f"{usuario.nombre} {usuario.apellido_p} {usuario.apellido_m}",
+            'lat': asistencia.latitud,
+            'lon': asistencia.longitud,
+            'fecha': asistencia.created_at.strftime('%Y-%m-%dT%H:%M:%S'), 
+            'ini': str(asistencia.hora_inicio),
+            'fin': str(asistencia.hora_fin),
+            'tiempo_trabajo': str(asistencia.tiempo_trabajo)
+        })
+
+    return jsonify(coordenadas)
+
+
 
 @app.route("/horario", methods=["GET"])
 @login_required
 def horarios():
     obtener = ControladorAsistencia.all_asistencias()
+
+    usuarios = []
+    if current_user.status == "Administrador":
+        usuarios_ids = set()
+        for asistencia in obtener:
+            if asistencia.usuario.id not in usuarios_ids:
+                usuarios_ids.add(asistencia.usuario.id)
+                usuarios.append(asistencia.usuario)
+
     asistencias = Asistencia.query.filter_by(usuario_id=current_user.id).all()
-
-    # Agrupar asistencias por usuario
-    usuarios_con_asistencias = {}
-    for asistencia in obtener:
-        usuario = asistencia.usuario
-        if usuario.id not in usuarios_con_asistencias:
-            usuarios_con_asistencias[usuario.id] = {
-                "usuario": usuario,
-                "asistencias": []
-            }
-        usuarios_con_asistencias[usuario.id]["asistencias"].append(asistencia)
-
     return render_template(
         "horarios.html",
         asistencias=asistencias,
-        obtener_asistencias=usuarios_con_asistencias.values(),
+        obtener_asistencias=obtener,
+        usuarios=usuarios,  # Lista de usuarios únicos
     )
 
 @app.route("/eliminar/<int:user_id>", methods=["POST", "GET"])

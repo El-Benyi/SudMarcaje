@@ -3,8 +3,98 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Merriweather", serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 300;
     font-style: normal;
 }
 
+body{
+    background: url(../fondo.jpeg) no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh;
+}
+.login-subcontainer{
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid rgb(255, 255, 255, .2);
+    border-radius: 30px;
+    padding: 30px 40px;
+    backdrop-filter: blur(20px);
+}
+
+.login-subcontainer h1{
+    font-size: 36px;
+    align-items: center;
+}
+.login-subcontainer .input-box{
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+    position: relative;
+}
+
+.input-box input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    border: 2px solid rgb(255, 255, 255, .2);
+    border-radius: 40px;
+    background-color: transparent;
+    font-size: 16px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+.input-box input::placeholder{
+    color: #fff;
+}
+.input-box i{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 25px;
+}
+
+.login-subcontainer .remember{
+    display: flex;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+
+.login-subcontainer #login-btn {
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    border: none;
+    border-radius: 40px;
+    background-color: rgba(27, 118, 255);
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+    outline: 1px solid;
+    outline-color: rgba(255, 255, 255, 0);
+    outline-offset: 0px;
+    text-shadow: none;
+    -webkit-transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+    outline-color: rgba(255, 255, 255, 0.5);
+    outline-offset: 0px;
+  }
+  
+  .login-subcontainer #login-btn:hover {
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+    outline-offset: 15px;
+    outline-color: rgba(255, 255, 255, 0);
+    text-shadow: 1px 1px 2px #427388;
+  }

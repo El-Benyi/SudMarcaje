@@ -14,11 +14,17 @@
             {{ form.correo.label }}
             {{ form.correo(class="form-control") }}
         </div>
+        {% if current_user.status == "Administrador" %}
+            <div class="mb-3">
+                {{ form.work .label }}
+                {{ form.work (class="form-control") }}
+            </div>
+        {% endif %}
         <div class="mb-3">
             {{ form.clave.label }}
             {{ form.clave(class="form-control", id="clave_input") }}
             <div class="btn1">
-                <input type="checkbox", id="show_clave">Mostrar Contraseña
+                <label ><input type="checkbox", id="show_clave">  Mostrar Contraseña</label>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>

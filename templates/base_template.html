@@ -22,6 +22,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/navbar.css') }}">
+    <link rel="shortcut icon" href="/static/logo.jpg" />
 </head>
 <body>
     {% if current_user.is_authenticated %}
@@ -31,30 +32,39 @@
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <h2 class="navbar-brand" style="font-size: 30px;">Bienvenido {{ current_user.nombre }}</h2>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
                     <a href="/" class="btn_navbar" ><i class='bx bxs-home' ></i>Inicio</a>
                   </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle btn_navbar" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class='bx bxs-calendar' id="horarios"></i> Horarios & Registro
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item " href="/horario"><i class='bx bxs-calendar'></i> Horarios</a></li>
-                      <li><a class="dropdown-item " href="{{ url_for('asistencia') }}"><i class='bx bx-list-ul' id="register_work"></i> Registro Asistencia</a></li>
-                    </ul>
-                  </li>
+                  {% if current_user.status == 'Normal' %}
+                    <li class="nav-item">
+                      <a href="/horario"  class="nav-link btn_navbar" role="button">
+                        <i class='bx bxs-calendar' id="horarios"></i> Mis Registros Asistencia
+                      </a>
+                    </li>
+                  {% endif %}
                   {% if current_user.status == 'Administrador' %}
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle btn_navbar" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class='bx bxs-briefcase'></i> Trabajadores
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{{ url_for('register') }}"><i class='bx bxs-user' id="users"></i> Registrar Trabajador</a></li>
-                      <li><a class="dropdown-item" href="/trabajadores"><i class='bx bxs-food-menu' id="reg_users"></i> Trabajadores</a></li>
-                    </ul>
-                  </li>
+                    <li class="nav-item">
+                      <a href="/horario" class="nav-link btn_navbar">
+                        <i class='bx bxs-calendar' id="horarios"></i> Registros Asistencia Trabajadores
+                      </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle btn_navbar" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class='bx bxs-briefcase'></i> Trabajadores
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="{{ url_for('register') }}"><i class='bx bxs-user' id="users"></i> Registrar Trabajador</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/trabajadores"><i class='bx bxs-food-menu' id="reg_users"></i> Trabajadores</a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a class="nav-link btn_navbar" href="/mapa"><i class='bx bx-map'></i> Mapa</a>
+                    </li>
                   {% endif %}
                   
                   <li class="nav-item">
