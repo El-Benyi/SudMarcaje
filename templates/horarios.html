@@ -54,6 +54,7 @@
                                             <th>Latitud</th>
                                             <th>Longitud</th>
                                             <th>Tiempo Trabajado</th>
+                                            <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -68,6 +69,11 @@
                                                     <td>{{ registro.latitud }}</td>
                                                     <td>{{ registro.longitud }}</td>
                                                     <td>{{ registro.tiempo_trabajo }}</td>
+                                                    {% if registro.estado == 1 %}
+                                                        <td>Activo</td>
+                                                    {% elif registro.estado == 0 %}
+                                                        <td>Inactivo</td>
+                                                    {% endif %}
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}

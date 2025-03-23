@@ -61,6 +61,36 @@ iniciar.addEventListener("click", function () {
     iniciarCronometro();  
     iniciar.disabled = true;  
     detener.disabled = false;  
+
+    const latitud = document.getElementById("lat").value;
+    const longitud = document.getElementById("lon").value;
+    const turnoValue = turno.value;
+    const fecha = document.getElementById("fecha").value;
+
+    const data = {
+        latitud: latitud,
+        longitud: longitud,
+        turno: turnoValue,
+        fecha_registro: fecha,
+        hora_inicio: horaInicio,  
+        estado: true,  
+        usuario_id: 1  
+    };
+
+    fetch("/asistencia", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del backend:", data);
+    })
+    .catch(error => {
+        console.error("Error al enviar datos:", error);
+    });
 });
 
 detener.addEventListener("click", function () {
@@ -102,7 +132,6 @@ detener.addEventListener("click", function () {
 
     detener.disabled = true;
     iniciar.disabled = false;
-    formulario.querySelector('button[type="submit"]').disabled = false;
 });
 
 window.addEventListener("load", function () {

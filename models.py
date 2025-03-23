@@ -4,6 +4,7 @@
 from app import db
 from sqlalchemy import func
 from flask_login import UserMixin
+
 from werkzeug.security import generate_password_hash, check_password_hash 
 
 #Modelos de bases de datos
@@ -64,6 +65,7 @@ class Asistencia(db.Model):
     created_at      = db.Column(db.DateTime, nullable=False, default=func.now())
     updated_at      = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now())
     tiempo_trabajo  = db.Column(db.Time(), nullable=True)
+    estado          = db.Column(db.Boolean(), nullable=True, default=True)
     usuario_id      = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
     usuario         = db.relationship("Usuario", back_populates="asistencias")
 

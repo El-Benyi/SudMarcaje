@@ -58,8 +58,8 @@
                                 {{ form_a.longitud(type="hidden", id="lon") }}
                             </div>
                             <div class="botones card-body">
-                                {{ form_a.submit(class="btn btn-success", id="ini_turno", disabled=disabled) }}
-                                <Button type="reset" class="btn btn-danger" id="fin_turno" disabled>Finalizar Turno</Button>
+                                {{ form_a.submit(class="btn btn-success", id="ini_turno") }}
+                                {{ form_a.end_submit(class="btn btn-danger", disabled=disabled, id="fin_turno") }}
                             </div>
                         </form>
                     </div>

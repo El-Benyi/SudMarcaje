@@ -193,35 +193,39 @@ def asistencia():
         latitud = data.get("latitud")
         longitud = data.get("longitud")
         turno = data.get("turno")
-        fecha_registro = data.get("fecha_registro")  
+        fecha_registro = data.get("fecha_registro")
+        hora_inicio = data.get("hora_inicio")
+        hora_fin = data.get("hora_fin")
         tiempo_trabajo = data.get("tiempo_trabajo")
-        
-        hora_inicio = data.get("hora_inicio") 
-        hora_fin = data.get("hora_fin")  
+        usuario_id = data.get("usuario_id")
 
-        usuario_id = current_user.id
+        # Si la hora de inicio se recibe, es para un nuevo turno (estado True)
+        if hora_inicio and not hora_fin:
+            nueva_asistencia = Asistencia(
+                fecha_registro=datetime.strptime(fecha_registro, "%Y-%m-%d").date(),
+                turno=turno,
+                hora_inicio=hora_inicio,
+                latitud=latitud,
+                longitud=longitud,
+                estado=True,
+                usuario_id=usuario_id
+            )
+            db.session.add(nueva_asistencia)
+            db.session.commit()
+            return jsonify({"message": "Turno iniciado correctamente"}), 201
 
-        if not hora_inicio:
-            raise ValueError("La hora de inicio no puede ser nula")
-        
-        if not hora_fin:
-            hora_fin = None
+        # Si se recibe hora de fin, es para finalizar el turno (estado False)
+        if hora_fin:
+            asistencia = Asistencia.query.filter_by(hora_inicio=hora_inicio, estado=True).first()
+            if asistencia:
+                asistencia.hora_fin = hora_fin
+                asistencia.tiempo_trabajo = tiempo_trabajo  # Aquí deberías manejar el formato correctamente
+                asistencia.estado = False  # Cambiar el estado a False (turno finalizado)
+                db.session.commit()
+                return jsonify({"message": "Turno finalizado correctamente"}), 200
+            else:
+                return jsonify({"error": "No se encontró el turno para finalizar"}), 404
 
-        nueva_asistencia = Asistencia(
-            fecha_registro=datetime.strptime(fecha_registro, "%Y-%m-%d").date(),  
-            turno=turno,
-            latitud=latitud,
-            longitud=longitud,
-            hora_inicio=hora_inicio,
-            hora_fin=hora_fin, 
-            tiempo_trabajo=tiempo_trabajo,
-            usuario_id=usuario_id
-        )
-
-        db.session.add(nueva_asistencia)
-        db.session.commit()
-
-        return jsonify({"message": "Asistencia registrada correctamente"}), 201
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "Hubo un problema al registrar la asistencia"}), 500
@@ -255,10 +259,12 @@ def obtener_coordenadas():
             'fecha': asistencia.created_at.strftime('%Y-%m-%dT%H:%M:%S'), 
             'ini': str(asistencia.hora_inicio),
             'fin': str(asistencia.hora_fin),
-            'tiempo_trabajo': str(asistencia.tiempo_trabajo)
+            'tiempo_trabajo': str(asistencia.tiempo_trabajo),
+            'estado': asistencia.estado 
         })
 
     return jsonify(coordenadas)
+
 
 
 

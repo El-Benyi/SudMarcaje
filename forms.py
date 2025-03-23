@@ -29,7 +29,7 @@ class FormularioAcceso(FlaskForm):
 
 class FormularioEditar(FlaskForm):
     status          = SelectField('Privilegios del Usuario', 
-                     choices=[('',''),('Normal', 'Normal'), ('Administrador', 'Administrador')], 
+                     choices=[('',''),('Trabajador', 'Trabajador'), ('Administrador', 'Administrador')], 
                      validators=[DataRequired()])
     numero_t            = StringField("Numero Telefonico", validators=[Length(min=9, max=9, message="El número debe tener exactamente 9 dígitos."),Regexp(r'^\d{9}$', message="El número debe contener solo 9 dígitos numéricos.")]) 
     cargo               = StringField('Cargo.', validators=[DataRequired(), Length(min=3)])
@@ -53,4 +53,5 @@ class FormularioAsistencia(FlaskForm):
     hora_registro       = TimeField('Hora de Registro', validators=[DataRequired()])
     tiempo_trabajo      = StringField("00:00:00", default="00:00:00", validators=[DataRequired()])
     
-    submit        = SubmitField('Iniciar Turno')
+    submit              = SubmitField('Iniciar Turno')
+    end_submit          = SubmitField('Finalizar Turno')
