@@ -8,6 +8,16 @@ from flask_sqlalchemy import SQLAlchemy #base de datos
 from flask_migrate import Migrate #versiones de bases de datos
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 
+
+
+#
+#app = Flask(__name__) 
+#app.config["SECRET_KEY"] = "sud_marcaje2025"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:sud_marcaje2025@localhost:3306/sud_marcaje"
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#db = SQLAlchemy(app) #iniciamos bases de datos
+
+
 #Iniciación y configuración de la app
 app = Flask(__name__) 
 app.config["SECRET_KEY"] = "mi clave!"
